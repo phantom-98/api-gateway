@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  CLIENT
+  ADMIN
+  DEVELOPER
+  PHARMACIST
+  PHARMACY_ASSISTANT
+}
+
+model User {
+  id      Int      @id @default(autoincrement())
+  email   String @db.VarChar(255) @unique
+  password    String @db.VarChar(255)
+  first_name String @db.VarChar(255)
+  last_name String @db.VarChar(255)
+  second_lastname String? @db.VarChar(255)
+  rut String @db.VarChar(255)
+  profile Profile @relation(fields: [profileId],references: [id])
+  profileId Int
+  is_active Boolean
+  createdAt DateTime @default(now()) @map("created_at") // Add this line for created_at timestamp
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+ @@map("user")
+}
+
+model Profile {
+  id        Int      @id @default(autoincrement())
+  type UserRole @unique
+  user      User[]
+  @@map("profile")
+}
