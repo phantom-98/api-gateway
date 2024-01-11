@@ -10,7 +10,9 @@ app.use(express.json());
 app.use(express.urlencoded());
 
 
-
+app.get('/test',(req,res) => {
+    res.json({message:'test'})
+})
 app.use('/auth',userRouter)
 app.use('/profile',Profilesrouter)
 app.listen(4001, () => {
