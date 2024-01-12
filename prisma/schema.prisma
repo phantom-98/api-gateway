@@ -11,7 +11,6 @@ datasource db {
 }
 
 enum UserRole {
-  CLIENT
   ADMIN
   DEVELOPER
   PHARMACIST
@@ -29,7 +28,7 @@ model User {
   profile Profile @relation(fields: [profileId],references: [id])
   profileId Int
   is_active Boolean
-  createdAt DateTime @default(now()) @map("created_at") // Add this line for created_at timestamp
+  createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
  @@map("user")
@@ -40,4 +39,19 @@ model Profile {
   type UserRole @unique
   user      User[]
   @@map("profile")
+}
+
+model Customer {
+  id      Int      @id @default(autoincrement())
+  email   String @db.VarChar(255) @unique
+  password    String @db.VarChar(255)
+  first_name String @db.VarChar(255)
+  last_name String @db.VarChar(255)
+  second_lastname String? @db.VarChar(255)
+  rut String @db.VarChar(255)
+  is_active Boolean
+  createdAt DateTime @default(now()) @map("created_at") 
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+ @@map("customer")
 }

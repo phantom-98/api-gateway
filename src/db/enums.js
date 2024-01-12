@@ -1,5 +1,4 @@
 const rolesEnums = {
-    CLIENT : 'CLIENT',
   ADMIN : 'ADMIN',
   DEVELOPER : 'DEVELOPER',
   PHARMACIST : 'PHARMACIST',

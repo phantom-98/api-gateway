@@ -16,7 +16,7 @@ const getOne = async (req,res) => {
     res.json(user)
 }
 
-const register = async (req,res) => {
+/* const register = async (req,res) => {
     const data = req.body
     
     const {error} = registerUserSchema.validate(data)
@@ -29,7 +29,7 @@ const profile = await findProfileByType(rolesEnums.CLIENT)
     const user = await createUser({...data, password:hashedPassword, is_active:true, profileId:profile.id})
     const token = createJwt({uid: user.id})
     res.json({user,token})
-}
+} */
 
 const update = async (req,res) => {
     const data = req.body;
@@ -83,17 +83,18 @@ const auth = async(req,res) => {
 
 }
 
-const registerStaffUser = async (req,res) => {
-    const {profileType,...data} = req.body
+const register = async (req,res) => {
+    const data = req.body
     
     const {error} = registerUserSchema.validate(data)
     
-    if(error || !profileType) return errorResponse(res,400,error.message)
+    if(error) return errorResponse(res,400,error.message)
     const foundUser = await prisma.user.findUnique({where:{email:data.email}})
     if(foundUser) return errorResponse(res,400,'user already exists')
     const hashedPassword = await bcrypt.hash(data.password,parseInt(process.env.SALT_ROUNDS))
-const profile = await findProfileByType(profileType)
-    const user = await createUser({...data, password:hashedPassword, is_active:true, profileId:profile.id})
+    const profile = await findProfile(data.profileId)
+    if(!profile) return errorResponse(res,400,'selected profile doest exists')
+    const user = await createUser({...data, password:hashedPassword, is_active:true})
     const token = createJwt({id: user.id})
     res.json({user,token})
 }
@@ -119,4 +120,4 @@ const refresUser = async (req,res) => {
       res.json({user:trimUser})
 }
 
-export {getUsers,register,update,auth,registerStaffUser,refresUser,getOne}
+export {getUsers,register,update,auth,refresUser,getOne}

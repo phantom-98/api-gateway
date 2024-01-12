@@ -7,6 +7,7 @@ const registerUserSchema = Joi.object({
     last_name:Joi.string().required(),
   second_lastname:Joi.string(),
     rut:Joi.string().required(),
+    profileId:Joi.number().required()
     
 
 })
