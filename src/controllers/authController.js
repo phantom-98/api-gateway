@@ -37,7 +37,7 @@ const update = async (req,res) => {
     const {error} = updateUserSchema.validate(data)
     
     if(!id) return errorResponse(res,400,'user id not provided')
-    if(error) return errorResponse(res,400,error.message)
+    if(error) return errorResponse(res,400,error.message,'alo')
     if(data.password){
         
         const hashedPassword = await bcrypt.hash(data.password,5)
@@ -69,7 +69,8 @@ const auth = async(req,res) => {
     const compare = await bcrypt.compare(data.password,user.password)
       
     if(!compare) return errorResponse(res,403,'incorrect password')
-      const token = createJwt({uid: user.id})
+    console.log(user.profile.id);
+      const token = createJwt({uid: user.id, profileId: user.profile.id})
 
     const {id,first_name, email, profile} = user
 

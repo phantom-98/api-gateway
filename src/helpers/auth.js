@@ -9,7 +9,7 @@ const createJwt = (payload) => {
 const checkJwt = (token) => {
 try {
     const decodedToken = jwt.verify(token,`${process.env.JWT_SECRET}`)
-    console.log('usuario revisado: ' + decodedToken.uid);
+    
     return decodedToken
 } catch (error) {
     return false;

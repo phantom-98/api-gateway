@@ -2,7 +2,7 @@ import Joi from "joi";
 
 const registerUserSchema = Joi.object({
     email: Joi.string().email().required(),
-    password: Joi.string().min(5).required() ,
+    password: Joi.string().required() ,
     first_name:Joi.string().required(),
     last_name:Joi.string().required(),
   second_lastname:Joi.string(),
@@ -28,7 +28,7 @@ const updateUserSchema = Joi.object({
 
 const loginUserSchema = Joi.object({
     email: Joi.string().required(),
-    password: Joi.string().min(5).required()
+    password: Joi.string().required()
 })
 
 export {registerUserSchema,updateUserSchema, loginUserSchema}
