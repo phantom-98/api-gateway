@@ -6,7 +6,6 @@ import { createUser, getAllUsers, getUser, getUserByEmail, updateUser } from "..
 import { findProfile } from "../services/profileService.js";
 const getUsers = async (req,res) => {
     const data = await getAllUsers(['profile'])
-    console.log('test');
     res.json(data)
 }
 const getOne = async (req,res) => {
