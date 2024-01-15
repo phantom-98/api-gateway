@@ -1,35 +1,19 @@
-import prisma from "../db/prismaClient.js"
 import { createJwt } from "../helpers/auth.js";
 import bcrypt from 'bcrypt'
 import { errorResponse } from "../helpers/response.js";
 import { loginUserSchema, registerUserSchema, updateUserSchema } from "../helpers/bodyValidators.js";
-import { rolesEnums } from "../db/enums.js";
-import { createUser, getAllUsers, updateUser } from "../services/userService.js";
-import { findProfile, findProfileByType } from "../services/profileService.js";
+import { createUser, getAllUsers, getUser, getUserByEmail, updateUser } from "../services/userService.js";
+import { findProfile } from "../services/profileService.js";
 const getUsers = async (req,res) => {
     const data = await getAllUsers(['profile'])
     res.json(data)
 }
 const getOne = async (req,res) => {
-    const user = await prisma.user.findUnique({where:{id:parseInt(req.params.id)},include:{profile:true}})
+    const user = await getUser(parseInt(req.params.id))
     
     res.json(user)
 }
 
-/* const register = async (req,res) => {
-    const data = req.body
-    
-    const {error} = registerUserSchema.validate(data)
-    
-    if(error) return errorResponse(res,400,error.message)
-    const foundUser = await prisma.user.findUnique({where:{email:data.email}})
-    if(foundUser) return errorResponse(res,400,'user already exists')
-    const hashedPassword = await bcrypt.hash(data.password,parseInt(process.env.SALT_ROUNDS))
-const profile = await findProfileByType(rolesEnums.CLIENT)
-    const user = await createUser({...data, password:hashedPassword, is_active:true, profileId:profile.id})
-    const token = createJwt({uid: user.id})
-    res.json({user,token})
-} */
 
 const update = async (req,res) => {
     const data = req.body;
@@ -57,19 +41,13 @@ const auth = async(req,res) => {
     
     if(error) return errorResponse(res,400,error.message)
 
-    const user = await prisma.user.findUnique({
-        where: {
-          email:data.email 
-        },
-        include:{profile:true}
-      });
+    const user = await getUserByEmail(data.email)
       
     if (!user) return errorResponse(res,401,'user not found')
 
     const compare = await bcrypt.compare(data.password,user.password)
       
     if(!compare) return errorResponse(res,403,'incorrect password')
-    console.log(user.profile.id);
       const token = createJwt({uid: user.id, profileId: user.profile.id})
 
     const {id,first_name, email, profile} = user
@@ -90,24 +68,19 @@ const register = async (req,res) => {
     const {error} = registerUserSchema.validate(data)
     
     if(error) return errorResponse(res,400,error.message)
-    const foundUser = await prisma.user.findUnique({where:{email:data.email}})
+    const foundUser = await getUserByEmail(data.email)
     if(foundUser) return errorResponse(res,400,'user already exists')
     const hashedPassword = await bcrypt.hash(data.password,parseInt(process.env.SALT_ROUNDS))
     const profile = await findProfile(data.profileId)
     if(!profile) return errorResponse(res,400,'selected profile doest exists')
     const user = await createUser({...data, password:hashedPassword, is_active:true})
-    const token = createJwt({id: user.id})
-    res.json({user,token})
+    
+    res.json(user)
 }
 
 const refresUser = async (req,res) => {
     const tokenUserId = req.body.user;
-    const user = await prisma.user.findUnique({
-        where: {
-          id:tokenUserId 
-        },
-        include:{profile:true}
-      });
+    const user = await getUser(tokenUserId)
 
       if (!user) return errorResponse(res,401,'user not found')
 

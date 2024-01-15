@@ -1,6 +1,6 @@
 import { checkJwt } from "../helpers/auth.js"
 import { errorResponse } from "../helpers/response.js"
-import { findAll, findProfile } from "../services/profileService.js"
+import { findProfile } from "../services/profileService.js"
 
 const verifyToken = (req,res,next) => {
     const customtoken = req.header('x-token')

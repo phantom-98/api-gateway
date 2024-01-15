@@ -12,11 +12,11 @@ const updateUser = async (userData, userId) => {
     return user;
 }
 const getUser = async (userId) => {
-    const user = await prisma.user.findUnique({where:{id:userId}})
+    const user = await prisma.user.findUnique({where:{id:userId},include:{profile:true}})
     return user;
 }
 const getUserByEmail = async (userEmail) => {
-    const user = await prisma.user.findUnique({where:{email:userEmail}})
+    const user = await prisma.user.findUnique({where:{email:userEmail},include:{profile:true}})
     return user;
 }
 const getAllUsers = async (relations) => {
