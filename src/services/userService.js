@@ -29,4 +29,14 @@ const getAllUsers = async (relations) => {
     return user;
 }
 
-export {createUser,updateUser,getAllUsers,getUser,getUserByEmail}
+const removeUserById = async (userId) => {
+    const deletedUser = await prisma.user.delete({
+        where: {
+          id: userId,
+        },
+      });
+
+      return deletedUser
+}
+
+export {createUser,updateUser,getAllUsers,getUser,getUserByEmail,removeUserById}

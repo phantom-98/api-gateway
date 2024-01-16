@@ -1,8 +1,8 @@
 import { createJwt } from "../helpers/auth.js";
 import bcrypt from 'bcrypt'
-import { errorResponse } from "../helpers/response.js";
+import { errorResponse, successResponse } from "../helpers/response.js";
 import { loginUserSchema, registerUserSchema, updateUserSchema } from "../helpers/bodyValidators.js";
-import { createUser, getAllUsers, getUser, getUserByEmail, updateUser } from "../services/userService.js";
+import { createUser, getAllUsers, getUser, getUserByEmail, removeUserById, updateUser } from "../services/userService.js";
 import { findProfile } from "../services/profileService.js";
 const getUsers = async (req,res) => {
     const data = await getAllUsers(['profile'])
@@ -94,4 +94,12 @@ const refresUser = async (req,res) => {
       res.json({user:trimUser})
 }
 
-export {getUsers,register,update,auth,refresUser,getOne}
+const removeUser = async (req,res) => {
+    const id = parseInt(req.params.id)
+
+    const removedUser = await removeUserById(id)
+
+    successResponse(res,200)
+}
+
+export {getUsers,register,update,auth,refresUser,getOne,removeUser}
