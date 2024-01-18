@@ -16,7 +16,7 @@ app.get('/test',(req,res) => {
     console.log(req.url);
     res.json({message:'test'})
 })
-app.all("/v1/*", createProxyHandler('http://localhost:4000'))
+app.all("/v1/*", createProxyHandler(process.env.API_URL))
 app.use('/auth',userRouter)
 app.use('/profile',Profilesrouter)
 app.listen(4001, () => {
