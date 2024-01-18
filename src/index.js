@@ -8,6 +8,7 @@ import createProxyHandler from "./utils/proxyHandler.js"
 const app = express()
 
 app.use(cors());
+app.all("/v1/*", createProxyHandler(process.env.API_URL))
 app.use(express.json());
 app.use(express.urlencoded());
 
@@ -16,7 +17,6 @@ app.get('/test',(req,res) => {
     console.log(req.url);
     res.json({message:'test'})
 })
-app.all("/v1/*", createProxyHandler(process.env.API_URL))
 app.use('/auth',userRouter)
 app.use('/profile',Profilesrouter)
 app.listen(4001, () => {
