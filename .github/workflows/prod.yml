@@ -14,7 +14,7 @@ jobs:
           username: ${{secrets.USERNAME}}
           password: ${{secrets.KEY}}
           script: |
-            cd /home/codes/posg
+            cd /home/codes/api_gateway
             git pull origin main
-            pm2 restart posGateway
+            pm2 restart gateway
             echo 'Deployment finished'
