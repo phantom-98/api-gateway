@@ -8,4 +8,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to DigitalOcean Droplet
-        run: echo ${{secrets.HOST}}
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{secrets.HOST}}
+          username: ${{secrets.USERNAME}}
+          password: ${{secrets.KEY}}
+          script: |
+            cd /home/codes/posg
+            git pull origin main
+            pm2 restart posGateway
+            echo 'Deployment finished'
