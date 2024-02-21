@@ -14,7 +14,7 @@ app.use(express.urlencoded());
 
 app.get("/test", (req, res) => {
   console.log(req.url);
-  res.json({ message: "test2" });
+  res.json({ message: "ac" });
 });
 app.use("/auth", userRouter);
 app.use("/profile", Profilesrouter);
